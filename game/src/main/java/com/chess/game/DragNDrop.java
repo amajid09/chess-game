@@ -1,7 +1,6 @@
 package com.chess.game;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.*;
@@ -23,8 +22,6 @@ public class DragNDrop extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 //        Circle rectangle = createCircle("#ff0fff", "#ff88ff", 100);
-        piece = blocks(50, 100);
-        piece.setFill(new ImagePattern(pawn));
 
         Pane pane  = new Pane();
         String[] board = new String[8];
@@ -37,17 +34,22 @@ public class DragNDrop extends Application {
                 board[i] = "";
                 rectangle.setFill(Color.GREENYELLOW);
             }
-            dropOn( rectangle, board);
-            pane.getChildren().add(rectangle);
+            pane.getChildren().add( rectangle );
+            if(i == 0 || i ==1){
+                piece = blocks(50, 100+(i*50));
+                piece.setFill(new ImagePattern(pawn));
+                dropOn(  rectangle, board, piece );
+                pane.getChildren().add( piece  );
+            }
         }
-        pane.getChildren().add(piece);
+
         Scene scene = new Scene(pane, 1024, 800, true);
         stage.setScene(scene);
         stage.setTitle("Drag and drop example.");
         stage.show();
     }
 
-    private void dropOn(Rectangle rectangle, String[] board) {
+    private void dropOn(Rectangle rectangle, String[] board, Rectangle piece) {
         piece.setOnDragDetected(e -> {
         System.out.println("Circle 1 drag detected");
         Dragboard db = piece.startDragAndDrop(TransferMode.COPY_OR_MOVE) ;
@@ -60,23 +62,21 @@ public class DragNDrop extends Application {
                 int x = (int) rectangle.getLayoutX();
                 int y = (int) rectangle.getLayoutY();
             System.out.println("x; " + x);
-                if(event.getDragboard().hasImage()
-                        && board[(x-100)/50].equals("pawn")
-                ){
+                if(event.getDragboard().hasImage()){
                     event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
                 }
                 event.consume();
         });
-        rectangle.setOnDragDropped(event-> {
+        rectangle.setOnDragDropped( event-> {
             System.out.println("dropped");
             Dragboard db = event.getDragboard();
             if(db.hasImage()){
-                System.out.println("Dropped: " + db.getImage());
-                piece.setLayoutY(rectangle.getLayoutY());
-                piece.setLayoutX(rectangle.getLayoutX());
-                event.setDropCompleted(true);
+                System.out.println( "Dropped: " + db.getImage() );
+                piece.setLayoutY( rectangle.getLayoutY() );
+                piece.setLayoutX( rectangle.getLayoutX() );
+                event.setDropCompleted( true );
             }else{
-                event.setDropCompleted(false);
+                event.setDropCompleted( false );
             }
             event.consume();
         });
