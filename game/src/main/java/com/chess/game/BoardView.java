@@ -3,19 +3,19 @@ package com.chess.game;
 import com.chess.game.pieces.Piece;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BoardView extends Application {
     public static final int RECT_SIZE = 50;
@@ -38,50 +38,56 @@ public class BoardView extends Application {
     private ImagePattern whiteBishop = new ImagePattern( new Image( String.valueOf( getClass().getResource("icons/icons8-bishop-50-white.png") ) ) );
     private ImagePattern whiteQueen = new ImagePattern( new Image( String.valueOf( getClass().getResource("icons/icons8-queen-50-white.png") ) ) );
     private ImagePattern whiteKing = new ImagePattern( new Image( String.valueOf( getClass().getResource("icons/icons8-king-50-white.png") ) ) );
+    private List<List<Rectangle>> rectangles = new ArrayList<>();
+    private int counter = 0;
+
     @Override
     public void start( Stage stage ) throws IOException {
-        AnchorPane root = new AnchorPane();
+        Pane root = new Pane();
         System.out.println(getClass().getResource("icons/icons8-pawn-50.png"));
         drawBoard(root);
+        placePieces(root);
+        System.out.println("pieces     " + counter);
+        makePieceDraggable(root);
         Scene scene = new Scene( root );
         stage.setTitle( "Hello!" );
         stage.setScene( scene );
         stage.show();
     }
 
-    private void drawBoard(AnchorPane root) {
+    private void makePieceDraggable(Pane root) {
+
+    }
+
+    private void drawBoard(Pane root) {
         for ( int i =0; i < GRID_SIZE; i++ ) {
             for ( int j = 0; j < GRID_SIZE; j++ ){
                 Rectangle color = new Rectangle( RECT_SIZE, RECT_SIZE );
-                Rectangle rectangle = placePiece(j, i);
+
                 color.setLayoutX( RECT_SIZE * j );
                 color.setLayoutY( RECT_SIZE * i );
-                if((i+j) %2 == 0) {
-                    color.setFill(Color.valueOf("DAB785"));
+                if( ( i+j ) % 2 == 0 ) {
+                    color.setFill( Color.valueOf("DAB785") );
                 }else{
-                    color.setFill(Color.valueOf("D5896F"));
+                    color.setFill( Color.valueOf("D5896F") );
                 }
-                dropOn(color, rectangle, board);
-                root.getChildren().addAll(color, rectangle);
+                root.getChildren().add( color );
             }
         }
     }
 
-    private void placePieces(AnchorPane root) {
-        for(int i = 0; i < BoardView.GRID_SIZE; i++ ) {
-            for (int j = 0; j <  BoardView.GRID_SIZE; j++ ) {
-
-                Rectangle rectangle = placePiece(j, i);
-                root.getChildren().add( rectangle );
+    private void placePieces( Pane root ) {
+        for( int i = 0; i < 2; i++ ) {
+            for ( int j = 0; j <  BoardView.GRID_SIZE; j++ ) {
+                placePiece( j, i, root );
+                placePiece( j,BoardView.GRID_SIZE - (i + 1), root);
             }
         }
     }
 
-    private Rectangle placePiece(int j, int i) {
-        ColorAdjust monochrome = new ColorAdjust();
-        monochrome.setSaturation(-1.0);
-
+    private void placePiece(int j, int i, Pane root) {
         Rectangle rectangle = new Rectangle( RECT_SIZE, RECT_SIZE );
+        rectangle.setId("piece");
         rectangle.setLayoutX( RECT_SIZE * j);
         String piece = board[i][j].getPiece();
         rectangle.setLayoutY( RECT_SIZE * i);
@@ -106,28 +112,33 @@ public class BoardView extends Application {
                 case "bishop" -> rectangle.setFill( whiteBishop );
                 case "queen" -> rectangle.setFill( whiteQueen );
                 case "king" -> rectangle.setFill( whiteKing );
-            }else{
-            rectangle.setFill(Color.TRANSPARENT);
-        }
-        return rectangle;
+            }
+
+
+        root.getChildren().forEach(child -> {
+                dropOn( rectangle, (Rectangle) child, board, i, j );
+        });
+        root.getChildren().add(rectangle);
     }
 
-    private void dropOn(Rectangle rectangle,Rectangle piece,  Piece[][] board) {
-        piece.setOnDragDetected(e -> {
-            System.out.println("Circle 1 drag detected");
-            Dragboard db = piece.startDragAndDrop(TransferMode.COPY_OR_MOVE) ;
+    private void dropOn(Rectangle piece, Rectangle rectangle, Piece[][] board, int i, int j) {
+        if(!board[i][j].isEmpty()) {
+        rectangle.setOnDragDetected(e -> {
+            Dragboard db = rectangle.startDragAndDrop(TransferMode.COPY_OR_MOVE);
             ClipboardContent content = new ClipboardContent();
-            content.putImage(((ImagePattern) piece.getFill()).getImage());
+            content.putImage(((ImagePattern) rectangle.getFill()).getImage());
             db.setContent(content);
         });
+    }
+        rectangle.setOnMouseDragged(e-> e.setDragDetect(true));
         rectangle.setOnDragOver(event-> {
+            System.out.println("here");
             int x = (int) rectangle.getLayoutX() / 100;
             int y = (int) rectangle.getLayoutY() / 100;
-            System.out.println("x: "+x );
-            System.out.println("Y: "+y );
-            if(event.getDragboard().hasImage()
-            ){
+            if(event.getDragboard().hasImage()){
                 event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                System.out.println("x: "+x );
+                System.out.println("Y: "+y );
             }
             event.consume();
         });
@@ -135,6 +146,8 @@ public class BoardView extends Application {
             System.out.println("dropped");
             Dragboard db = event.getDragboard();
             if(db.hasImage()){
+                System.out.println("rec x "+ rectangle.getLayoutX());
+                System.out.println("rec y "+ rectangle.getLayoutY());
                 System.out.println("Dropped: " + db.getImage());
                 piece.setLayoutY(rectangle.getLayoutY());
                 piece.setLayoutX(rectangle.getLayoutX());
@@ -143,33 +156,6 @@ public class BoardView extends Application {
                 event.setDropCompleted(false);
             }
             event.consume();
-        });
-    }
-    private void makeDraggable( Rectangle node , Piece piece) {
-
-        node.setOnMousePressed(e -> {
-            currX = e.getSceneX() ;
-            currY = e.getSceneY() ;
-
-            prevX = ( int ) (( currX  / RECT_SIZE) % GRID_SIZE );
-             prevY = ( int ) (( currY  / RECT_SIZE) % GRID_SIZE );
-        });
-        node.setOnMouseDragged(event -> {
-            node.startDragAndDrop(TransferMode.MOVE);
-            startX = event.getSceneX() ;
-            startY = event.getSceneY() ;
-            int x = ( int ) (( startX  / RECT_SIZE) % GRID_SIZE ) * RECT_SIZE;
-            int y = ( int ) (( startY  / RECT_SIZE) % GRID_SIZE ) * RECT_SIZE;
-            System.out.println("x: " + x/RECT_SIZE );
-            System.out.println("y: " + y/RECT_SIZE);
-            int row = y/RECT_SIZE, col =x/RECT_SIZE;
-//            if(piece.move(board, col, row)) {
-//                System.out.println("prevX: " + prevX);
-//                System.out.println("prevY: " + prevY);
-//                node.setLayoutY( y );
-//                node.setLayoutX( x );
-//
-//            }
         });
     }
 
