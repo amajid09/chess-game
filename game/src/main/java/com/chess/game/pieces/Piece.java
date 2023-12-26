@@ -26,6 +26,9 @@ public abstract class Piece {
     public abstract List<Position> validMoves(Piece[][] board, Position Location);
 
     protected boolean isOtherPiece(Piece piece) {
+        if(this.isEmpty()){
+            return false;
+        }
         return !piece.getColor().equals(this.color);
     }
 }

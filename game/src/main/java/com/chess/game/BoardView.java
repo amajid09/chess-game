@@ -89,7 +89,7 @@ public class BoardView extends Application {
         rectangle.setLayoutY( RECT_SIZE * i);
         if(i == 1) {
             rectangle.setFill( pawn );
-        }else if(i == 6){
+    }else if(i == 6){
             rectangle.setFill( whitePawn );
         }else if(i == 0)
             switch ( piece ) {
