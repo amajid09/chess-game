@@ -25,7 +25,7 @@ public abstract class Piece {
 
     public abstract List<Position> validMoves(Piece[][] board, Position Location);
 
-    protected boolean isOtherPiece(Pawn piece) {
+    protected boolean isOtherPiece(Piece piece) {
         return !piece.getColor().equals(this.color);
     }
 }

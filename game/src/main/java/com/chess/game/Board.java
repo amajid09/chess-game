@@ -50,6 +50,9 @@ public class Board {
        int row = position.getY(), column = position.getX();
         pieces[row][column] = piece;
     }
+    public boolean isOccupied(int row, int col){
+       return pieces[row][col] != null && !pieces[row][col].isEmpty();
+    }
 
     public Piece[][] getPieces(){
         return pieces;
@@ -80,6 +83,7 @@ public class Board {
     public boolean move(Piece piece, Position from, Position dest) {
         if(piece.validMoves(this.getPieces(), from).contains(dest)){
             this.placePiece(piece, dest);
+            this.pieces[from.getY()][from.getX()] = new Empty();
             return true;
         }else{
             return false;
