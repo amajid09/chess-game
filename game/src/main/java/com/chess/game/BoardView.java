@@ -1,6 +1,7 @@
 package com.chess.game;
 
 import com.chess.game.pieces.Piece;
+import com.chess.game.pieces.PieceColor;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -31,7 +32,7 @@ public class BoardView extends Application {
     private int prevX, prevY;
     private final ImagePattern whitePawn = new ImagePattern( new Image( String.valueOf( getClass().getResource("icons/icons8-pawn-50-white.png") ) ) );
     private final ImagePattern whiteRook = new ImagePattern( new Image( String.valueOf( getClass().getResource("icons/icons8-rook-50-white.png") ) ) );
-
+    private PieceColor turn = PieceColor.WHITE;
     private final ImagePattern whiteKnight = new ImagePattern( new Image( String.valueOf( getClass().getResource("icons/icons8-knight-50-white.png") ) ) );
     private final ImagePattern whiteBishop = new ImagePattern( new Image( String.valueOf( getClass().getResource("icons/icons8-bishop-50-white.png") ) ) );
     private final ImagePattern whiteQueen = new ImagePattern( new Image( String.valueOf( getClass().getResource("icons/icons8-queen-50-white.png") ) ) );
@@ -115,12 +116,14 @@ public class BoardView extends Application {
 //    click on piece which will show all available positions and by clicking on one of the available position will the piece move to that position
     private void clickOnPiece(Rectangle piece) {
        piece.setOnMouseClicked(e-> {
+
            int i = (int)  ( e.getSceneY() / RECT_SIZE % GRID_SIZE );
            int j = (int)  ( e.getSceneX() / RECT_SIZE % GRID_SIZE );
            System.out.printf("col %d row %d \n", j, i);
            System.out.printf("Available space  %s \n", board.getPieces()[i][j].validMoves(allPieces, new Position(j, i)));
            List<Position> availablePosition = board.getPieces()[i][j].validMoves(allPieces, new Position(j, i));
-           highlightSquare(availablePosition, piece);
+           if(board.getPieces()[i][j].getColor().equals(turn))
+                highlightSquare(availablePosition, piece);
        });
     }
 
@@ -155,6 +158,7 @@ public class BoardView extends Application {
            }
            movePiece( piece, movingPiece, from, dest );
            highlighted.getChildren().clear();
+           turn = turn.equals(PieceColor.WHITE) ? PieceColor.BLACK : PieceColor.WHITE;
        });
     }
 
