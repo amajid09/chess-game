@@ -4,7 +4,7 @@ import com.chess.game.Position;
 import java.util.List;
 public abstract class Piece {
     private String name;
-
+    private boolean isCheck;
 
     private PieceColor color;
     public Piece(String name, PieceColor color) {

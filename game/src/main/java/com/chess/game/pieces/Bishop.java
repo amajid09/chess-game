@@ -11,6 +11,7 @@ public class Bishop extends Piece {
     Position bottomLeft = new Position(-1,1);
     Position bottomRight = new Position(1,1);
     private List<Position> openPosition ;
+    private boolean check=false;
 
     public Bishop(PieceColor color) {
         super("bishop", color);
@@ -21,11 +22,16 @@ public class Bishop extends Piece {
         openPosition = new ArrayList<>();
         int x = location.getX();
         int y = location.getY();
-        checkTopLeft( x, y, board );
-        checkTopRight( x, y , board );
-        checkBottomRight( x, y , board );
-        checkBottomLeft( x, y, board );
-        return openPosition;
+
+        checkTopLeft(x, y, board);
+        checkTopRight(x, y, board);
+        checkBottomRight(x, y, board);
+        checkBottomLeft(x, y, board);
+        if(!check)
+            return openPosition;
+        else{
+            return List.of(new Position(1,1));
+        }
     }
 
     private void checkBottomRight( int x, int y, Piece[][] board ) {
@@ -83,6 +89,7 @@ public class Bishop extends Piece {
         x += topLeft.getX();
         y += topLeft.getY();
         while ( x > -1 && y > -1  ){
+            System.out.printf("left x: %d\n left y: %d", x, y);
             if( board[y][x].isOtherPiece( this ) ){
                 openPosition.add( new Position( x, y ) );
                 break;

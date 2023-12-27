@@ -68,8 +68,6 @@ public class Pawn extends Piece {
 
 
     private void validDownMoves(Piece[][] board) {
-        System.out.println("Y................." + y);
-
         if(y <= 6 && (board[y + 1][x] == null || board[y + 1][x].isEmpty())) {
             openPositions.add(new Position(x, y + 1));
             if(y == 1){

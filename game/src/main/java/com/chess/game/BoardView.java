@@ -116,14 +116,12 @@ public class BoardView extends Application {
 //    click on piece which will show all available positions and by clicking on one of the available position will the piece move to that position
     private void clickOnPiece(Rectangle piece) {
        piece.setOnMouseClicked(e-> {
-
            int i = (int)  ( e.getSceneY() / RECT_SIZE % GRID_SIZE );
            int j = (int)  ( e.getSceneX() / RECT_SIZE % GRID_SIZE );
-           System.out.printf("col %d row %d \n", j, i);
-           System.out.printf("Available space  %s \n", board.getPieces()[i][j].validMoves(allPieces, new Position(j, i)));
-           List<Position> availablePosition = board.getPieces()[i][j].validMoves(allPieces, new Position(j, i));
-           if(board.getPieces()[i][j].getColor().equals(turn))
-                highlightSquare(availablePosition, piece);
+           if(board.getPieces()[i][j].getColor().equals(turn)) {
+               List<Position> availablePosition = board.getValidMoves(board.getPieces()[i][j], j, i);
+               highlightSquare(availablePosition, piece);
+           }
        });
     }
 
@@ -146,16 +144,18 @@ public class BoardView extends Application {
        rectangle.setOnMouseClicked(e-> {
            int col = x / RECT_SIZE;
            int row = y / RECT_SIZE;
-           System.out.printf("Clicked on the highlighted rectangle @( %d, %d)\n " , x, y);
-           System.out.printf("@( %d, %d) " , col, row);
+
            int prevX = ( int ) ( piece.getLayoutX() / RECT_SIZE );
            int prevY = ( int ) ( piece.getLayoutY() / RECT_SIZE );
+
            Piece movingPiece = allPieces[ prevY ][ prevX ];
            Position from = new Position( prevX, prevY );
            Position dest = new Position( col, row );
+
            if(board.isOccupied( row, col )) {
                killPiece( x, y );
            }
+
            movePiece( piece, movingPiece, from, dest );
            highlighted.getChildren().clear();
            turn = turn.equals(PieceColor.WHITE) ? PieceColor.BLACK : PieceColor.WHITE;

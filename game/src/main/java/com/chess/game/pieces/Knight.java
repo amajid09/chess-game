@@ -24,7 +24,7 @@ public class Knight extends Piece {
            int possibleX = position.getX();
            int possibleY = position.getY();
            int calcX = x + possibleX, calcY = y + possibleY;
-           if(calcY >= 0 && calcX >= 0 && calcX < 8 && calcY < 8 && board[calcY][calcX].isOtherPiece(this)){
+           if(calcY >= 0 && calcX >= 0 && calcX < 8 && calcY < 8 && (board[calcY][calcX].isOtherPiece(this) || board[calcY][calcX].isEmpty())){
                openPosition.add(new Position(calcX, calcY));
            }
         }
