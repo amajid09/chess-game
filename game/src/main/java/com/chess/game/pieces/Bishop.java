@@ -28,17 +28,17 @@ public class Bishop extends Piece {
         return openPosition;
     }
 
-    private void checkBottomRight(int x, int y, Piece[][] board) {
+    private void checkBottomRight( int x, int y, Piece[][] board ) {
         x += bottomRight.getX();
         y += bottomRight.getY();
-        while ( x < 8 && y < 8 && board[y][x].isEmpty() ) {
-            if(board[y][x].isOtherPiece(this)){
-                openPosition.add(new Position(x, y));
+        while ( x < 8 && y < 8 ) {
+            if( board[y][x].isOtherPiece( this ) ){
+                openPosition.add( new Position(x, y) );
                 break;
-            }else if(!board[y][x].isEmpty()) {
+            }else if( !board[y][x].isEmpty() ) {
                 break;
             }else {
-                openPosition.add(new Position(x, y));
+                openPosition.add( new Position(x, y) );
             }
             x += bottomRight.getX();
             y += bottomRight.getY();
