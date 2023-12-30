@@ -7,7 +7,7 @@ import javafx.geometry.Pos;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.chess.game.BoardView.GRID_SIZE;
+import static com.chess.game.Game.GRID_SIZE;
 
 public class Board {
     private boolean check = false;

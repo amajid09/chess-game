@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.List;
 
-public class BoardView extends Application {
+public class Game extends Application {
     public static final int RECT_SIZE = 60;
     public static final int GRID_SIZE = 8;
     private final int offsetX = 500;
@@ -75,11 +75,11 @@ public class BoardView extends Application {
 
     private void placePieces() {
         for( int i = 0; i < 2; i++ ) {
-            for ( int j = 0; j <  BoardView.GRID_SIZE; j++ ) {
+            for ( int j = 0; j <  Game.GRID_SIZE; j++ ) {
                 //place black pieces
                 placePiece( j, i );
                 //place white pieces
-                placePiece( j,BoardView.GRID_SIZE - ( i + 1 ) );
+                placePiece( j,Game.GRID_SIZE - ( i + 1 ) );
             }
         }
     }
