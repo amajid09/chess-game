@@ -92,7 +92,7 @@ public class Board {
 
     public boolean move(Piece piece, Position from, Position dest) {
         if(piece.validMoves(this.getPieces(), from).contains(dest)){
-
+            kingCorridors.clear();
             check = piece.validMoves(this.getPieces(), dest).stream()
                     .anyMatch(position -> {
                 king = this.getPieces()[position.getY()][position.getX()];
@@ -120,7 +120,6 @@ public class Board {
             System.out.println("King: Where is my knight?");
             System.out.println("Pawn: He is at.. umm "+validMoves.toString() );
             System.out.println("King: What! He is everywhere. Call him to protect me");
-
             return validMoves.stream().
                     filter(kingCorridors::contains).toList();
         }

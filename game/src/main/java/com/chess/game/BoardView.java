@@ -16,36 +16,33 @@ import java.io.IOException;
 import java.util.List;
 
 public class BoardView extends Application {
-    public static final int RECT_SIZE = 50;
+    public static final int RECT_SIZE = 60;
     public static final int GRID_SIZE = 8;
-    private double startX, startY;
-    private final ImagePattern pawn = new ImagePattern( new Image( String.valueOf( getClass().getResource("icons/icons8-pawn-50.png") ) ) );
-    private final ImagePattern bishop = new ImagePattern( new Image(String.valueOf( getClass().getResource("icons/icons8-bishop-50.png" ) ) ) );
-    private final ImagePattern rook = new ImagePattern( new Image(String.valueOf( getClass().getResource("icons/icons8-rook-50.png" ))));
-    private final ImagePattern knight = new ImagePattern( new Image(String.valueOf( getClass().getResource( "icons/icons8-knight-50.png" ))));
-    private final ImagePattern king = new ImagePattern( new Image(String.valueOf( getClass().getResource( "icons/icons8-king-50.png" ))));
-    private final ImagePattern queen = new ImagePattern( new Image(String.valueOf( getClass().getResource( "icons/icons8-queen-50.png" ))));
-    Piece[][] allPieces = Board.theBoard().defaultBoard();
-    private final Board board = Board.theBoard();
-    private double currX;
-    private double currY;
-    private int prevX, prevY;
-    private final ImagePattern whitePawn = new ImagePattern( new Image( String.valueOf( getClass().getResource("icons/icons8-pawn-50-white.png") ) ) );
-    private final ImagePattern whiteRook = new ImagePattern( new Image( String.valueOf( getClass().getResource("icons/icons8-rook-50-white.png") ) ) );
-    private PieceColor turn = PieceColor.WHITE;
-    private final ImagePattern whiteKnight = new ImagePattern( new Image( String.valueOf( getClass().getResource("icons/icons8-knight-50-white.png") ) ) );
-    private final ImagePattern whiteBishop = new ImagePattern( new Image( String.valueOf( getClass().getResource("icons/icons8-bishop-50-white.png") ) ) );
-    private final ImagePattern whiteQueen = new ImagePattern( new Image( String.valueOf( getClass().getResource("icons/icons8-queen-50-white.png") ) ) );
-    private final ImagePattern whiteKing = new ImagePattern( new Image( String.valueOf( getClass().getResource("icons/icons8-king-50-white.png") ) ) );
-    private final Group highlighted  = new Group();
-    private final Group pieces = new Group();
+    private ImagePattern pawn;
+    private ImagePattern bishop;
+    private ImagePattern rook;
+    private ImagePattern knight;
+    private ImagePattern king;
+    private ImagePattern queen;
+    Piece[][] allPieces;
+    private Board board;
+    private ImagePattern whitePawn ;
+    private ImagePattern whiteRook;
+    private PieceColor turn;
+    private ImagePattern whiteKnight;
+    private ImagePattern whiteBishop;
+    private ImagePattern whiteQueen;
+    private ImagePattern whiteKing;
+    private Group highlighted;
+    private Group pieces;
+
+
 
     @Override
     public void start( Stage stage ) throws IOException {
+        initialise();
         Group grid = new Group();
-        Pane root = new Pane(grid, pieces, highlighted);
-
-        System.out.println(getClass().getResource("icons/icons8-pawn-50.png"));
+        Pane root = new Pane( grid, pieces, highlighted );
         drawBoard(grid);
         placePieces();
         Scene scene = new Scene( root );
@@ -56,7 +53,7 @@ public class BoardView extends Application {
 
 
     private void drawBoard(Group root) {
-        for ( int i =0; i < GRID_SIZE; i++ ) {
+        for ( int i = 0; i < GRID_SIZE; i++ ) {
             for ( int j = 0; j < GRID_SIZE; j++ ){
                 Rectangle color = new Rectangle( RECT_SIZE, RECT_SIZE );
 
@@ -177,7 +174,26 @@ public class BoardView extends Application {
                 findFirst().get();
         pieces.getChildren().remove(rect);
     }
+    private void initialise(){
+        pawn = new ImagePattern( new Image( String.valueOf( getClass().getResource("icons/icons8-pawn-50.png") ) ) );
+        bishop = new ImagePattern( new Image(String.valueOf( getClass().getResource("icons/icons8-bishop-50.png" ) ) ) );
+        rook = new ImagePattern( new Image(String.valueOf( getClass().getResource("icons/icons8-rook-50.png" ))));
+        knight = new ImagePattern( new Image(String.valueOf( getClass().getResource( "icons/icons8-knight-50.png" ))));
+        king = new ImagePattern( new Image(String.valueOf( getClass().getResource( "icons/icons8-king-50.png" ))));
+        queen = new ImagePattern( new Image(String.valueOf( getClass().getResource( "icons/icons8-queen-50.png" ))));
+        allPieces = Board.theBoard().defaultBoard();
+        board = Board.theBoard();
+        whitePawn = new ImagePattern( new Image( String.valueOf( getClass().getResource("icons/icons8-pawn-50-white.png") ) ) );
+        whiteRook = new ImagePattern( new Image( String.valueOf( getClass().getResource("icons/icons8-rook-50-white.png") ) ) );
+        turn = PieceColor.WHITE;
+        whiteKnight = new ImagePattern( new Image( String.valueOf( getClass().getResource("icons/icons8-knight-50-white.png") ) ) );
+        whiteBishop = new ImagePattern( new Image( String.valueOf( getClass().getResource("icons/icons8-bishop-50-white.png") ) ) );
+        whiteQueen = new ImagePattern( new Image( String.valueOf( getClass().getResource("icons/icons8-queen-50-white.png") ) ) );
+        whiteKing = new ImagePattern( new Image( String.valueOf( getClass().getResource("icons/icons8-king-50-white.png") ) ) );
+        highlighted  = new Group();
+        pieces = new Group();
 
+    }
     public static void main(String[] args) {
         launch();
     }
