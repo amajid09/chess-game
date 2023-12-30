@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -18,6 +19,9 @@ import java.util.List;
 public class BoardView extends Application {
     public static final int RECT_SIZE = 60;
     public static final int GRID_SIZE = 8;
+    private final int offsetX = 500;
+    private final int offsetY = 100;
+    private static final int offset = 140;
     private ImagePattern pawn;
     private ImagePattern bishop;
     private ImagePattern rook;
@@ -35,17 +39,17 @@ public class BoardView extends Application {
     private ImagePattern whiteKing;
     private Group highlighted;
     private Group pieces;
-
+    
 
 
     @Override
     public void start( Stage stage ) throws IOException {
         initialise();
         Group grid = new Group();
-        Pane root = new Pane( grid, pieces, highlighted );
+        AnchorPane root = new AnchorPane( grid, pieces, highlighted );
         drawBoard(grid);
         placePieces();
-        Scene scene = new Scene( root );
+        Scene scene = new Scene( root , 140, 140);
         stage.setTitle( "Hello!" );
         stage.setScene( scene );
         stage.show();
@@ -57,8 +61,8 @@ public class BoardView extends Application {
             for ( int j = 0; j < GRID_SIZE; j++ ){
                 Rectangle color = new Rectangle( RECT_SIZE, RECT_SIZE );
 
-                color.setLayoutX( RECT_SIZE * j );
-                color.setLayoutY( RECT_SIZE * i );
+                color.setLayoutX( (RECT_SIZE * j) + offsetX );
+                color.setLayoutY( (RECT_SIZE * i) + offsetY );
                 if( ( i+j ) % 2 == 0 ) {
                     color.setFill( Color.valueOf("DAB785") );
                 }else{
@@ -82,9 +86,9 @@ public class BoardView extends Application {
 
     private void placePiece(int j, int i) {
         Rectangle rectangle = new Rectangle( RECT_SIZE, RECT_SIZE );
-        rectangle.setLayoutX( RECT_SIZE * j);
+        rectangle.setLayoutX( (RECT_SIZE * j) + offsetX);
         String piece = allPieces[i][j].getPiece();
-        rectangle.setLayoutY( RECT_SIZE * i);
+        rectangle.setLayoutY( (RECT_SIZE * i) + offsetY);
         if(i == 1) {
             rectangle.setFill( pawn );
     }else if(i == 6){
